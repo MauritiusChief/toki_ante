@@ -65,7 +65,10 @@ def convert_text(input_file, output_txt, output_html, mapping, tooltip):
             # 处理标点符号和特殊字符
             converted_punc = ''.join(punc_map.get(char, char) for char in token)
             converted_tokens.append(converted_punc)
-            html_tokens.append(html.escape(converted_punc))
+            # html用的换行
+            html_punc = html.escape(converted_punc)
+            html_punc = html_punc.replace('\n', '\n<br>')
+            html_tokens.append(html_punc)
 
     # 写入TXT
     with open(output_txt, 'w', encoding='utf-8') as fout:
