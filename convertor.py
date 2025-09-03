@@ -43,7 +43,7 @@ def convert_text(input_file, output_txt, output_html, mapping, tooltip):
         '>': '》'
     }
     # 虚词
-    mark = ['li', 'e', 'pi', 'o']
+    mark = ['li', 'e', 'pi', 'o', 'la']
 
     tokens = re.split(r'(\W+)', text)
     # print(tokens)
