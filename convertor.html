@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Toki Pona Converter</title>
+  <style>
+    :root {
+      --bg: #fafafa;
+      --fg: #111827;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --chip: #f3f4f6;
+    }
+    html, body { height: 100%; }
+    body {
+      margin: 0; padding: 16px; box-sizing: border-box;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg); color: var(--fg);
+    }
+    .wrap { max-width: 920px; margin: 0 auto; }
+    h1 { font-size: 18px; margin: 0 0 8px; font-weight: 600; }
+    .muted { color: var(--muted); font-size: 12px; }
+    textarea {
+      width: 100%; min-height: 180px; resize: vertical; padding: 12px 14px;
+      border: 1px solid var(--border); border-radius: 8px; outline: none;
+      background: #fff; color: inherit; line-height: 1.5;
+    }
+    .result {
+      margin-top: 12px; padding: 14px; min-height: 140px;
+      border: 1px solid var(--border); border-radius: 8px; background: #fff;
+      line-height: 1.7;
+    }
+    /* Tooltip styling for converted tokens */
+    .result span { cursor: help; border-bottom: 1px dotted #9ca3af; }
+    .result .mark { color: #999faa; }
+    .status { margin: 8px 0 6px; }
+    .chip { display:inline-block; padding:2px 8px; background:var(--chip); border-radius:999px; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Toki Pona Converter</h1>
+    <div class="muted status" id="status"><span class="chip">Loading dictionary.csv…</span></div>
+    <textarea id="input" placeholder="Type Toki Pona here… e.g. jan li moku e kili."></textarea>
+    <div id="result" class="result" aria-live="polite"></div>
+  </div>
+
+  <script>
+    // --- Configuration & helpers ------------------------------------------------
+    const PUNC_MAP = {
+      ',': '，', '.': '。', '!': '！', '?': '？', ':': '：', ';': '；',
+      '(': '（', ')': '）', '[': '【', ']': '】', '<': '《', '>': '》'
+    };
+
+    // Highlight function words (same as the Python version)
+    const MARK = new Set(['li', 'e', 'pi', 'o', 'la']);
+
+    let MAPPING = Object.create(null);     // { toki_pona_word -> target_string }
+    let TOOLTIP = Object.create(null);     // { toki_pona_word -> brief_cn_translation }
+
+    function escapeHTML(s) {
+      return s
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function isLowerAsciiWord(s) {
+      return /^[a-z]+$/.test(s);
+    }
+
+    // Minimal CSV splitter that supports quoted fields
+    function splitCSVLine(line) {
+      const out = []; let cur = ''; let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (inQuotes) {
+          if (ch === '"') {
+            if (line[i + 1] === '"') { cur += '"'; i++; } // escaped quote
+            else { inQuotes = false; }
+          } else {
+            cur += ch;
+          }
+        } else {
+          if (ch === ',') { out.push(cur); cur = ''; }
+          else if (ch === '"') { inQuotes = true; }
+          else { cur += ch; }
+        }
+      }
+      out.push(cur);
+      return out;
+    }
+
+    function parseDictionaryCSV(csvText) {
+      csvText = csvText.replace(/^\uFEFF/, ''); // strip BOM
+      const lines = csvText.split(/\r?\n/);
+      const mapping = Object.create(null);
+      const tooltip = Object.create(null);
+
+      for (let i = 0; i < lines.length; i++) {
+        const raw = lines[i];
+        if (!raw || !raw.trim()) continue;
+        // Emulate Python script: skip the first row (assumed header)
+        if (i === 0) continue;
+        const cols = splitCSVLine(raw);
+        if (cols.length >= 2 && cols[0].trim()) {
+          const key = cols[0].trim();
+          const val = (cols[1] || '').trim();
+          const cn  = (cols[2] || '').trim();
+          mapping[key] = val;
+          tooltip[key] = cn;
+        }
+      }
+      return { mapping, tooltip };
+    }
+
+    // --- Core conversion --------------------------------------------------------
+    function convert(text) {
+      const tokens = text.split(/(\W+)/); // keep delimiters
+      const htmlParts = [];
+
+      for (const token of tokens) {
+        if (isLowerAsciiWord(token) && Object.prototype.hasOwnProperty.call(MAPPING, token)) {
+          const out = MAPPING[token];
+          const tip = `${token} : ${TOOLTIP[token] || ''}`;
+          const markClass = MARK.has(token) ? ' class="mark"' : '';
+          htmlParts.push(`<span${markClass} title="${escapeHTML(tip)}">${escapeHTML(out)}</span>`);
+        } else {
+          // Apply punctuation map char-by-char
+          let converted = Array.from(token).map(ch => PUNC_MAP[ch] ?? ch).join('');
+          converted = escapeHTML(converted).replaceAll('\n', '\n<br>');
+          htmlParts.push(converted);
+        }
+      }
+      document.getElementById('result').innerHTML = htmlParts.join('');
+    }
+
+    // --- Bootstrapping ---------------------------------------------------------
+    async function init() {
+      const status = document.getElementById('status');
+      try {
+        const res = await fetch('dictionary.csv', { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const csvText = await res.text();
+        const parsed = parseDictionaryCSV(csvText);
+        MAPPING = parsed.mapping;
+        TOOLTIP = parsed.tooltip;
+        status.innerHTML = '<span class="chip">Dictionary loaded ✓</span>';
+      } catch (err) {
+        console.error(err);
+        status.innerHTML = '<span class="chip" style="color:#b91c1c">Failed to load dictionary.csv — place it beside this HTML file.</span>';
+      }
+
+      // Initial render and live updates
+      const input = document.getElementById('input');
+      input.addEventListener('input', (e) => convert(e.target.value));
+      convert(input.value || '');
+    }
+
+    init();
+  </script>
+</body>
+</html>
