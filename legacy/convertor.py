@@ -103,8 +103,8 @@ span {{
         fout.write(html_content)
 
 if __name__ == "__main__":
-    # root_path = "toki_hanzi/"
-    root_path = ""
+    root_path = "legacy/"
+    # root_path = ""
     csv_file = root_path+"dictionary.csv"     # 道本语字典CSV
     input_file = root_path+"input.txt"     # 道本语文本
     output_txt = root_path+"output.txt"
