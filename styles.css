@@ -1,0 +1,31 @@
+:root {
+  --bg: #fafafa;
+  --fg: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --chip: #f3f4f6;
+}
+html, body { height: 100%; }
+body {
+  margin: 0; padding: 16px; box-sizing: border-box;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg); color: var(--fg);
+}
+.wrap { max-width: 920px; margin: 0 auto; }
+h1 { font-size: 18px; margin: 0 0 8px; font-weight: 600; }
+.muted { color: var(--muted); font-size: 12px; }
+textarea {
+  width: 100%; min-height: 180px; resize: vertical; padding: 12px 14px;
+  border: 1px solid var(--border); border-radius: 8px; outline: none;
+  background: #fff; color: inherit; line-height: 1.5;
+}
+.result {
+  width: 100%; margin-top: 12px; padding: 14px; min-height: 140px;
+  border: 1px solid var(--border); border-radius: 8px; background: #fff;
+  line-height: 1.7;
+}
+/* Tooltip styling for converted tokens */
+.result span { cursor: help; border-bottom: 1px dotted #9ca3af; }
+.result .mark { color: #9ca3af; }
+.status { margin: 8px 0 6px; }
+.chip { display:inline-block; padding:2px 8px; background:var(--chip); border-radius:999px; font-size:12px; }
