@@ -60,7 +60,7 @@ async function loadCSVText(csvText, displayName) {
 
 async function loadDictionaryFromURL(url, displayName) {
   try {
-    setStatus(`Loading ${displayName}…`);
+    setStatus(`加载${displayName}中……`);
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const csv = await res.text();
