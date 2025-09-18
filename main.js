@@ -3,6 +3,8 @@ import {PUNC_MAP, escapeHTML, isLowerAsciiWord, parseDictionaryCSV} from './help
 const PRESETS = [
   { id: 'default', label: '默认 (dictionary.csv)', path: 'dictionary.csv' },
   { id: 'conservative', label: '无虚词 (dictionary_c.csv)', path: 'dictionary_c.csv' },
+  { id: 'onomatopoeia', label: '拟声词 (dictionary_d.csv)', path: 'dictionary_d.csv' },
+  { id: 'reverse', label: '逆向 (dictionary_r.csv)', path: 'dictionary_r.csv' },
 ]
 
 const LS_KEYS = {
@@ -21,6 +23,7 @@ let TOOLTIP = Object.create(null);     // { toki_pona_word -> brief_cn_translati
 function convert(text) {
   const tokens = text.split(/(\W+)/); // keep delimiters
   const htmlParts = [];
+  // console.log(tokens)
 
   for (const token of tokens) {
     if (isLowerAsciiWord(token) && Object.prototype.hasOwnProperty.call(MAPPING, token)) {
@@ -49,13 +52,18 @@ function setActiveDictName(name) {
 
 // #region --- Dictionary loading -----------------------------------------------------
 async function loadCSVText(csvText, displayName) {
-  const parsed = parseDictionaryCSV(csvText);
-  MAPPING = parsed.mapping;
-  TOOLTIP = parsed.tooltip;
-  setStatus(`字典加载完毕 ✓ (${Object.keys(MAPPING).length}个条目)`, true);
-  setActiveDictName(displayName);
-  // 触发一次渲染
-  convert(document.getElementById('input').value || '');
+  try {
+    const parsed = parseDictionaryCSV(csvText);
+    MAPPING = parsed.mapping;
+    TOOLTIP = parsed.tooltip;
+    setStatus(`字典加载完毕 ✓ (${Object.keys(MAPPING).length}个条目)`, true);
+    setActiveDictName(displayName);
+    // 触发一次渲染
+    convert(document.getElementById('input').value || '');
+  } catch (e) {
+    console.error(e);
+    setStatus(`加载字典失败: ${e.message}`, false);
+  }
 }
 
 async function loadDictionaryFromURL(url, displayName) {
@@ -69,13 +77,13 @@ async function loadDictionaryFromURL(url, displayName) {
     localStorage.removeItem(LS_KEYS.customCSV);
   } catch (e) {
     console.error(e);
-    setStatus(`无法加载 ${displayName}，请和HTML文件放在相同目录`, false);
+    setStatus(`无法加载 ${displayName}：${e.message}`, false);
   }
 }
 
 async function loadDictionaryFromFile(file) {
   const text = await file.text();
-  await loadCSVText(text, `Custom: ${file.name}`);
+  await loadCSVText(text, `自定义文件: ${file.name}`);
   // 缓存自定义 CSV 文本，刷新后也能恢复
   try { localStorage.setItem(LS_KEYS.customCSV, text); } catch {}
 }
@@ -92,7 +100,7 @@ function populatePresetSelect(selectEl) {
   if (localStorage.getItem(LS_KEYS.customCSV)) {
     const opt = document.createElement('option');
     opt.value = '__custom_saved__';
-    opt.textContent = '自定义 (saved from upload)';
+    opt.textContent = '自定义 (保存的字典)';
     selectEl.appendChild(opt);
   }
 }
@@ -109,7 +117,7 @@ async function init() {
     const val = e.target.value;
     if (val === '__custom_saved__') {
       const csv = localStorage.getItem(LS_KEYS.customCSV);
-      if (csv) await loadCSVText(csv, '自定义 (saved)');
+      if (csv) await loadCSVText(csv, '自定义 (已保存)');
       else setStatus('无已存储自定义字典。', false);
       localStorage.setItem(LS_KEYS.presetId, val);
       return;
@@ -138,7 +146,7 @@ async function init() {
   const lastPresetId = localStorage.getItem(LS_KEYS.presetId);
   if (lastPresetId === '__custom_saved__' && localStorage.getItem(LS_KEYS.customCSV)) {
     select.value = '__custom_saved__';
-    await loadCSVText(localStorage.getItem(LS_KEYS.customCSV), '自定义 (saved)');
+    await loadCSVText(localStorage.getItem(LS_KEYS.customCSV), '自定义 (已保存)');
   } else {
     const preset = PRESETS.find(p => p.id === lastPresetId) || PRESETS[0];
     select.value = preset.id;
