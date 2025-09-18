@@ -4,7 +4,7 @@ const PRESETS = [
   { id: 'default', label: '默认 (dictionary.csv)', path: 'dictionary.csv' },
   { id: 'conservative', label: '无虚词 (dictionary_c.csv)', path: 'dictionary_c.csv' },
   { id: 'onomatopoeia', label: '拟声词 (dictionary_d.csv)', path: 'dictionary_d.csv' },
-  { id: 'reverse', label: '逆向 (dictionary_r.csv)', path: 'dictionary_r.csv' },
+  // { id: 'reverse', label: '逆向 (dictionary_r.csv)', path: 'dictionary_r.csv' },
 ]
 
 const LS_KEYS = {
