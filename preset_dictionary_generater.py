@@ -57,6 +57,7 @@ changes_f = {
         "sitelen": "图书",
         "taso": "但惟",
         "toki": "语言话",
+        "tomo": "房屋室",
         "tawa": "向往",
         "utala": "战斗",
         "weka": "离去"
