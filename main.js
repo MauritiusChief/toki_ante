@@ -15,6 +15,7 @@ const LS_KEYS = {
 
 // Highlight function words (same as the Python version)
 const MARK = new Set(['li', 'e', 'pi', 'o', 'la']);
+const PREPO = new Set(['kepeken', 'lon', 'sama', 'tan', 'tawa'])
 
 let MAPPING = Object.create(null);     // { toki_pona_word -> target_string }
 let TOOLTIP = Object.create(null);     // { toki_pona_word -> brief_cn_translation }
@@ -30,7 +31,8 @@ function convert(text) {
       const out = MAPPING[token];
       const tip = `${token} : ${TOOLTIP[token] || ''}`;
       const markClass = MARK.has(token) ? ' class="mark"' : '';
-      htmlParts.push(`<span${markClass} title="${escapeHTML(tip)}">${escapeHTML(out)}</span>`);
+      const prepoClass = PREPO.has(token) ? ' class="prepo"' : '';
+      htmlParts.push(`<span${markClass}${prepoClass} title="${escapeHTML(tip)}">${escapeHTML(out)}</span>`);
     } else {
       // Apply punctuation map char-by-char
       let converted = Array.from(token).map(ch => PUNC_MAP[ch] ?? ch).join('');
