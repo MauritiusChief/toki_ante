@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>道本语生成器</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <h1>道本语生成器</h1>
+
+    <div class="row" role="group" aria-label="Dictionary controls">
+      <span class="select">
+        <span class="muted">预设：</span>
+        <select id="dictSelect" aria-label="Choose preset dictionary"></select>
+      </span>
+      <span class="file">
+        <label for="dictUpload" class="muted">上传字典(CSV):</label>
+        <input id="dictUpload" type="file" accept=".csv,text/csv" />
+      </span>
+    </div>
+
+    <div>
+      <span id="activeDict" class="chip" title="当前字典">未选择字典</span>
+      <span class="muted status" id="status"><span class="chip">加载字典中……</span></span>
+    </div>
+
+    <div class="two-col" style="margin-top:8px;">
+      <!-- 查询栏（左列） -->
+      <aside class="panel">
+        <div class="searchbox">
+          <input id="search" placeholder="查询字典" />
+        </div>
+        <table class="tbl" aria-live="polite">
+          <thead>
+            <tr><th>道本语</th><th>翻译</th><th>释义</th></tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </aside>
+      <!-- 主编辑区（右列） -->
+      <main>
+        <textarea id="input" placeholder="此处输入中文 (e.g. 人者食向果)"></textarea>
+        <div id="result" class="result" aria-live="polite"></div>
+      </main>
+    </div>
+
+  </div>
+
+  <script type="module" src="writor.js"></script>
+</body>
+</html>
