@@ -46,6 +46,14 @@ export function parseDictionaryCSV(csvText) {
   const mapping = Object.create(null);
   const tooltip = Object.create(null);
 
+  // Validate header
+  if (lines.length > 0) {
+    const header = lines[0].trim();
+    if (header !== '道本语,正字,释义toki_hanzi专用标识') {
+      throw new Error(`CSV文件格式错误，请检查表格头`);
+    }
+  }
+
   for (let i = 0; i < lines.length; i++) {
     const raw = lines[i];
     if (!raw || !raw.trim()) continue;
