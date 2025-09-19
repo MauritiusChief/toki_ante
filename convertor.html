@@ -11,18 +11,20 @@
     <h1>道本语转换器</h1>
 
     <div class="row" role="group" aria-label="Dictionary controls">
-      <div class="select">
+      <span class="select">
         <span class="muted">预设：</span>
         <select id="dictSelect" aria-label="Choose preset dictionary"></select>
-      </div>
-      <div class="file">
+      </span>
+      <span class="file">
         <label for="dictUpload" class="muted">上传字典(CSV):</label>
         <input id="dictUpload" type="file" accept=".csv,text/csv" />
-      </div>
-      <span id="activeDict" class="chip" title="当前字典">未选择字典</span>
+      </span>
     </div>
 
-    <div class="muted status" id="status"><span class="chip">加载字典中……</span></div>
+    <div>
+      <span id="activeDict" class="chip" title="当前字典">未选择字典</span>
+      <span class="muted status" id="status"><span class="chip">加载字典中……</span></span>
+    </div>
 
     <textarea id="input" placeholder="此处输入道本语 (e.g. jan li moku e kili.)"></textarea>
     <div id="result" class="result" aria-live="polite"></div>

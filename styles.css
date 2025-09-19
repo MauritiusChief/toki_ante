@@ -26,6 +26,7 @@ textarea {
 }
 /* Tooltip styling for converted tokens */
 .result span { cursor: help; border-bottom: 1px dotted #9ca3af; }
-.result .mark { color: #9ca3af; }
+.result .mark { color: #acb4c1; }
+.result .prepo { color: #777e8b; }
 .status { margin: 8px 0 6px; }
 .chip { display:inline-block; padding:2px 8px; background:var(--chip); border-radius:999px; font-size:12px; }
