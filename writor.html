@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>道本语转换器</title>
+  <title>道本语生成器</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="wrap">
-    <h1>道本语转换器</h1>
+    <h1>道本语生成器</h1>
 
     <div class="row" role="group" aria-label="Dictionary controls">
       <span class="select">
@@ -43,12 +43,13 @@
       </aside>
       <!-- 主编辑区（右列） -->
       <main>
-        <textarea id="input" placeholder="此处输入道本语 (e.g. jan li moku e kili.)"></textarea>
+        <textarea id="input" placeholder="此处输入中文 (e.g. 人者食把果)"></textarea>
         <div id="result" class="result" aria-live="polite"></div>
       </main>
     </div>
+
   </div>
 
-  <script type="module" src="convertor.js"></script>
+  <script type="module" src="writor.js"></script>
 </body>
 </html>
