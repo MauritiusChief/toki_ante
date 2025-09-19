@@ -49,7 +49,7 @@ export function parseDictionaryCSV(csvText) {
   // Validate header
   if (lines.length > 0) {
     const header = lines[0].trim();
-    if (header !== '道本语,正字,释义toki_hanzi专用标识') {
+    if (header !== '道本语,正字,释义-toki_ante专用标识') {
       throw new Error(`CSV文件格式错误，请检查表格头`);
     }
   }
