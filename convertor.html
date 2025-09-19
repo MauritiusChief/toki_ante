@@ -26,10 +26,29 @@
       <span class="muted status" id="status"><span class="chip">加载字典中……</span></span>
     </div>
 
-    <textarea id="input" placeholder="此处输入道本语 (e.g. jan li moku e kili.)"></textarea>
-    <div id="result" class="result" aria-live="polite"></div>
+    <div class="two-col" style="margin-top:8px;">
+      <!-- 查询栏（左列） -->
+      <aside class="panel">
+        <div class="searchbox">
+          <input id="search" placeholder="查询字典" />
+        </div>
+        <div class="table-wrapper">
+          <table class="tbl" aria-live="polite">
+            <thead>
+              <tr><th>道本语</th><th>翻译</th><th>释义</th></tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </aside>
+      <!-- 主编辑区（右列） -->
+      <main>
+        <textarea id="input" placeholder="此处输入道本语 (e.g. jan li moku e kili.)"></textarea>
+        <div id="result" class="result" aria-live="polite"></div>
+      </main>
+    </div>
   </div>
 
-  <script type="module" src="main.js"></script>
+  <script type="module" src="convertor.js"></script>
 </body>
 </html>

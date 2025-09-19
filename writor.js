@@ -108,7 +108,7 @@ async function init() {
     }
     const preset = PRESETS.find(p => p.id === val) || PRESETS[0];
     localStorage.setItem(writorApp.LS_KEYS.presetId, preset.id);
-    await loadDictionaryFromURL(preset.path, preset.label);
+    await loadDictionaryFromURL(writorApp, preset.path, preset.label);
   });
 
   // 绑定事件：上传文件
@@ -125,7 +125,7 @@ async function init() {
   // 输入联动
   inputEl.addEventListener('input', (e) => convert(e.target.value));
   // 搜索联动
-  search.addEventListener('input', (e) => renderTable(e.target.value));
+  search.addEventListener('input', (e) => renderTable(writorApp, e.target.value));
   convert(inputEl.value || '');
 
   // 恢复上次选择

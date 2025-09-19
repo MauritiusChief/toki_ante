@@ -40,6 +40,7 @@ function boldHit(text, q){
 }
 
 export function renderTable(app, query=''){
+  // console.log(app)
   const q = query.trim();
   const tbody = document.getElementById('tableBody');
   const DICT_ROWS = Object.entries(app.MAPPING).map( ([key, val]) => [key, val, app.TOOLTIP[key]] )
