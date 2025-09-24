@@ -44,9 +44,11 @@ export function renderTable(app, query=''){
   const q = query.trim();
   const tbody = document.getElementById('tableBody');
   const DICT_ROWS = Object.entries(app.MAPPING).map( ([key, val]) => [key, val, app.TOOLTIP[key]] )
-  const rows = DICT_ROWS.filter(r =>
-    !q || r[0].includes(q) || r[1].includes(q) || r[2].includes(q)
-  );
+  const rows = DICT_ROWS
+    .filter(r =>
+      !q || r[0].includes(q) || r[1].includes(q) || r[2].includes(q)
+    )
+    .sort((a, b) => a[0].localeCompare(b[0]));
   const html = rows.map(r => `
     <tr class="hit">
       <td>${boldHit(r[0], q)}</td>

@@ -1,0 +1,55 @@
+草稿：
+(元 la)*n 元[作主语] (li 助动词 元[作谓语或表语] (e 元[作宾语])*n 介词 元 )*n
+其中元又是 主词 (修饰词 / (pi 主修饰词 修饰词*n))*n en 另一个元
+其中宾语又可以是 ni: 另一个句子
+
+Constext Free Grammar:
+
+S        → LA_CHAIN CLAUSE            // Sentence
+LA_CHAIN → LA_ITEM LA_CHAIN | ε
+LA_ITEM  → NP la | PP la
+
+CLAUSE   → SUBJ      PREDSEQ          // 一般主语：需要 li
+CLAUSE   → SUBJ_MS   PRED             // 主语仅为 mi 或 sina：省略 li 的常见语法
+
+SUBJ     → NP
+SUBJ_MS  → MI | SINA
+
+NP       → NBAR NP_TAIL               // Noun Phrase, 名词短语
+NP_TAIL  → en NBAR NP_TAIL | ε
+
+PREDSEQ  → li PRED
+PREDSEQ  → li PRED PREDSEQ
+
+PRED     → NBAR                       // Predicate, 谓词
+PRED     → NBAR OBJ_LIST
+PRED     → NBAR PP_LIST
+PRED     → NBAR OBJ_LIST PP_LIST
+
+OBJ_LIST → e OBJ
+OBJ_LIST → e OBJ OBJ_LIST
+
+OBJ      → NP
+OBJ      → ni: S
+
+PP_LIST  → PP
+PP_LIST  → PP PP_LIST
+
+PP       → PREP NP                    // Preposition Phrase, 介词短语
+
+NBAR     → HEAD                       // N-bar, 名词核心组
+NBAR     → HEAD MODS
+
+MODS     → MOD
+MODS     → MOD MODS
+
+MOD      → ADJ
+MOD      → NBAR_PI
+
+NBAR_PI  → pi NBAR2                   // pi-短语需要“至少两词”的修饰组；用 NBAR_PI 强化这一约束
+
+NBAR2    → HEAD ADJ_PLUS              // NBAR2 至少是 “HEAD + 至少一修饰”
+                                      // 这样保证了 pi 后面不会只剩一个词（toki pona 对 pi 的惯例要求）
+
+ADJ_PLUS → ADJ
+ADJ_PLUS → ADJ ADJ_PLUS
