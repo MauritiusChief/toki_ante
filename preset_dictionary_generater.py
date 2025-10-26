@@ -35,7 +35,17 @@ with open("edits_f.csv", "r", encoding="utf-8") as f:
         key, value = row[0].strip(), row[1].strip()
         changes_f["edits"][key] = value
 
-changes = [changes_c, changes_d, changes_f]
+changes_j = {
+    "outfile": "dictionary_j.csv",
+    "edits": {}
+}
+with open("edits_j.csv", "r", encoding="utf-8") as f:
+    reader = csv.reader(f)
+    for row in reader:
+        key, value = row[0].strip(), row[1].strip()
+        changes_j["edits"][key] = value
+
+changes = [changes_c, changes_d, changes_f, changes_j]
 
 # 读取原始 CSV 内容
 with input_file.open("r", encoding="utf-8-sig", newline="") as f:
